@@ -16,7 +16,42 @@ namespace Solve\Config;
 
 class Config {
 
-	public function __constructor() {
+	static private $_environment = false;
+
+	public function __constructor() {}
+
+
+	public static function getConfig($configName, $field = null) {
 
 	}
+
+	public static function setConfig($configName, $field, $value) {
+
+	}
+
+	public function getDefaultEnvironment() {
+
+	}
+
+	public function getEnvironment() {
+		return self::$_environment;
+	}
+
+	public function setEnvironment($environment) {
+		return self::$_environment = $environment;
+	}
+
+
+	public function save() {
+
+	}
+
+	public function getDeepArrayValue() {
+
+	}
+
+
+
+
+
 }

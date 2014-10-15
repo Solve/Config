@@ -11,11 +11,18 @@ namespace Solve\Config\Tests;
 
 use Solve\Config\Config;
 
+require_once __DIR__.'/../Config.php';
+require_once __DIR__.'/../vendor/autoload.php';
+
 class ConfigTest extends \PHPUnit_Framework_TestCase {
 
 	public function testMain() {
 		$instance = new Config();
-		$this->assertInstanceOf('Config', $instance, 'Constructor test');
+
+		//set
+		//get
+
+		$this->assertTrue(true, 'Constructor test');
 	}
 }
  
