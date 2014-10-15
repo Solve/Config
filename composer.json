@@ -14,7 +14,8 @@
     ],
     "require": {
         "php": ">=5.3.0",
-        "symfony/yaml": "2.5.x-dev"
+        "symfony/yaml": "2.5.x-dev",
+        "solve/storage": "*"
     },
     "autoload": {
         "psr-0": { "Solve\\Config\\": "" }

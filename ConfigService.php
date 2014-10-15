@@ -18,37 +18,89 @@ namespace Solve\Config;
  * Class ConfigService is used to operate with config objects
  *
  * @version 1.0
- * @author  Sergey Evtyshenko <s.evtyshenko@gmail.com>
+ * @author Sergey Evtyshenko <s.evtyshenko@gmail.com>
+ * @author Alexandr Viniychuk <alexandr.viniychuk@icloud.com>
  */
 
 class ConfigService {
 
-	static private $_configs = null;
+    private static $_loadedConfigs          = array();
+    private static $_currentEnvironmentName = 'local';
 
-	static private $_projectPath = false;
+    private static $_configsPath;
 
-	public static function getConfig($name) {
-		if (!array_key_exists($name, self::$_configs)) {
-//			self::$_configs[$name] = Config::getConfig($name);
-		}
+    /**
+     * @param string $configName
+     * @param string $environmentName
+     * @return Config
+     * @throws \Exception
+     */
+    public static function getConfig($configName, $environmentName = null) {
+        if (empty(self::$_loadedConfigs[$configName])) {
+            self::loadConfig($configName);
+        }
+        if (!empty($environmentName)) {
+            self::loadEnvironment($environmentName, $configName);
+        }
+        return self::$_loadedConfigs[$configName];
+    }
 
-		return self::$_configs[$name];
-	}
+    public static function loadConfig($configName) {
+        if (empty(self::$_configsPath)) throw new \Exception('Base path not defined for configs');
 
-	public static function loadEnvironmentConfig($configName, $domain) {
-		self::$_configs[$configName]->setEnvironment($domain);
+        self::$_loadedConfigs[$configName] = new Config($configName);
+    }
 
-	}
+    public static function loadEnvironment($environmentName, $configName = null) {
+        if (!is_dir(self::$_configsPath . $environmentName)) throw new \Exception('Environment path does not exist: '.$environmentName);
+        if (empty($configName)) {
+            self::loadAllConfigs();
+        }
+        self::$_currentEnvironmentName = $environmentName;
 
-	public static function getEnvironmentConfig($configName, $domain) {
+        if (!empty($configName)) {
+            $configsToUpdate = array($configName);
+        } else {
+            $configsToUpdate = array_keys(self::$_loadedConfigs);
+        }
 
-	}
+        foreach($configsToUpdate as $configName) {
+            /**
+             * @var Config $configInstance
+             */
+            $configInstance = self::$_loadedConfigs[$configName];
+            $configInstance->loadEnvironment($environmentName);
+        }
+    }
 
-	public function setProjectPath($path){
-		self::$_projectPath = $path;
-	}
+    public static function loadAllConfigs() {
+        $files = GLOB(self::getConfigsPath() . '*.yml');
+        if (!empty($files)) {
+            foreach ($files as $fileName) {
+                self::loadConfig(substr($fileName, 0, -strrpos($fileName, '.yml')));
+            }
+        }
+    }
 
-	public static function __call() {
+    /**
+     * @return mixed
+     */
+    public static function getConfigsPath() {
+        return self::$_configsPath;
+    }
 
-	}
-} 
+    /**
+     * @param mixed $configsPath
+     */
+    public static function setConfigsPath($configsPath) {
+        self::$_configsPath = $configsPath;
+    }
+
+    /**
+     * @return string
+     */
+    public static function getCurrentEnvironmentName() {
+        return self::$_currentEnvironmentName;
+    }
+
+}
