@@ -14,7 +14,7 @@
     ],
     "require": {
         "php": ">=5.3.0",
-        "symfony/yaml": "2.5.x-dev",
+        "symfony/yaml": "*",
         "solve/storage": "*"
     },
     "autoload": {
