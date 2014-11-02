@@ -77,7 +77,7 @@ class ConfigService {
         $files = GLOB(self::getConfigsPath() . '*.yml');
         if (!empty($files)) {
             foreach ($files as $fileName) {
-                self::loadConfig(substr($fileName, 0, -strrpos($fileName, '.yml')));
+                self::loadConfig(substr($fileName, strrpos($fileName, DIRECTORY_SEPARATOR)+1, strrpos($fileName, '.yml')-strlen($fileName)));
             }
         }
     }
