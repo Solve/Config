@@ -69,8 +69,8 @@ class Config {
         return $this;
     }
 
-    public function get($deepKey) {
-        return $this->_combinedData->getDeepValue($deepKey);
+    public function get($deepKey, $defaultValue = null) {
+        return $this->_combinedData->getDeepValue($deepKey, $defaultValue);
     }
 
     public function getData() {
