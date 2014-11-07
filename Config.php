@@ -18,7 +18,7 @@ use Solve\Storage\YamlStorage;
 
 class Config {
 
-    private $_fullOriginalPath;
+    private $_path;
     /**
      * @var YamlStorage
      */
@@ -37,13 +37,13 @@ class Config {
     private $_name;
 
     public function __construct($configName) {
-        $this->_fullOriginalPath = ConfigService::getConfigsPath() . $configName . '.yml';
+        $this->_path = ConfigService::getConfigsPath() . $configName . '.yml';
         $this->_name = $configName;
         $this->load();
     }
 
     public function load() {
-        $this->_originalData = new YamlStorage($this->_fullOriginalPath);
+        $this->_originalData = new YamlStorage($this->_path);
         $this->_combinedData = new ArrayStorage($this->_originalData->getData());
         if (!empty($this->_loadedEnvironmentName)) {
             $this->loadEnvironment($this->_loadedEnvironmentName);
@@ -79,7 +79,7 @@ class Config {
 
     public function set($deepKey, $value, $toEnvironment = null) {
         //@todo hasDeepKey
-        if (($this->_environmentData->has($deepKey) && ($toEnvironment !== false)) || ($toEnvironment === true)) {
+        if ($this->_environmentData && ($this->_environmentData->has($deepKey) && ($toEnvironment !== false)) || ($toEnvironment === true)) {
             $this->_environmentData->setDeepValue($deepKey, $value);
         } else {
             $this->_originalData->setDeepValue($deepKey, $value);
@@ -93,6 +93,10 @@ class Config {
      */
     public function getName() {
         return $this->_name;
+    }
+
+    public function getPath() {
+        return $this->_path;
     }
 
 }
