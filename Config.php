@@ -70,7 +70,7 @@ class Config {
     }
 
     public function has($deepKey) {
-        return $this->_combinedData->has($deepKey);
+        return $this->_combinedData->hasDeep($deepKey);
     }
 
     public function get($deepKey, $defaultValue = null) {
@@ -83,7 +83,7 @@ class Config {
 
     public function set($deepKey, $value, $toEnvironment = null) {
         //@todo hasDeepKey
-        if ($this->_environmentData && ($this->_environmentData->has($deepKey) && ($toEnvironment !== false)) || ($toEnvironment === true)) {
+        if ($this->_environmentData && ($this->_environmentData->hasDeep($deepKey) && ($toEnvironment !== false)) || ($toEnvironment === true)) {
             $this->_environmentData->setDeepValue($deepKey, $value);
         } else {
             $this->_originalData->setDeepValue($deepKey, $value);
